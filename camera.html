@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Camera Booth</title>
+
+<style>
+
+body{
+margin:0;
+background:#000;
+color:white;
+font-family:Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+
+video{
+width:95%;
+max-width:450px;
+border-radius:20px;
+box-shadow:0 0 30px rgba(255,215,0,0.4);
+}
+
+canvas{
+display:none;
+}
+
+.controls{
+margin-top:20px;
+}
+
+button{
+padding:14px 25px;
+margin:5px;
+border:none;
+border-radius:50px;
+font-size:16px;
+font-weight:bold;
+background:gold;
+cursor:pointer;
+}
+
+#countdown{
+font-size:60px;
+font-weight:bold;
+margin:15px;
+color:gold;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>Faris ❤️ Shafiqah</h2>
+
+<div id="countdown"></div>
+
+<video id="video" autoplay playsinline></video>
+
+<canvas id="canvas"></canvas>
+
+<div class="controls">
+<button onclick="capturePhoto()">📸 Capture</button>
+</div>
+
+<script>
+
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+
+navigator.mediaDevices.getUserMedia({
+video:{
+facingMode:"user"
+}
+})
+.then(stream=>{
+video.srcObject = stream;
+});
+
+function capturePhoto(){
+
+let count = 3;
+
+const countdown = document.getElementById("countdown");
+
+countdown.innerHTML = count;
+
+const timer = setInterval(()=>{
+
+count--;
+
+if(count>0){
+
+countdown.innerHTML=count;
+
+}else{
+
+clearInterval(timer);
+
+countdown.innerHTML="📸";
+
+canvas.width=video.videoWidth;
+canvas.height=video.videoHeight;
+
+canvas.getContext("2d").drawImage(
+video,
+0,
+0
+);
+
+localStorage.setItem(
+"photo",
+canvas.toDataURL("image/jpeg",0.9)
+);
+
+window.location.href="frame.html";
+
+}
+
+},1000);
+
+}
+
+</script>
+
+</body>
+</html>
