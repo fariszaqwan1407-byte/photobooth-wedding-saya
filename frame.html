@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Frame</title>
+
+<style>
+body{
+margin:0;
+padding:20px;
+background:#111;
+font-family:Arial,sans-serif;
+color:white;
+text-align:center;
+}
+
+.frame{
+max-width:450px;
+margin:auto;
+padding:15px;
+border:8px solid gold;
+border-radius:20px;
+background:white;
+color:black;
+box-shadow:0 0 30px rgba(255,215,0,.4);
+}
+
+.frame h2{
+margin:10px 0;
+color:#b8860b;
+}
+
+.frame img{
+width:100%;
+border-radius:10px;
+}
+
+.date{
+margin-top:8px;
+font-weight:bold;
+}
+
+.buttons{
+margin-top:20px;
+}
+
+button{
+padding:14px 25px;
+margin:5px;
+border:none;
+border-radius:50px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.retake{
+background:#666;
+color:white;
+}
+
+.continue{
+background:gold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="frame">
+
+<h2>Faris ❤️ Shafiqah</h2>
+
+<img id="preview">
+
+<div class="date">
+27 September 2026
+</div>
+
+</div>
+
+<div class="buttons">
+<button class="retake" onclick="retake()">
+Retake
+</button>
+
+<button class="continue" onclick="nextPage()">
+Continue
+</button>
+</div>
+
+<script>
+
+const photo = localStorage.getItem("photo");
+
+if(!photo){
+window.location.href="camera.html";
+}
+
+document.getElementById("preview").src = photo;
+
+function retake(){
+window.location.href="camera.html";
+}
+
+function nextPage(){
+window.location.href="upload.html";
+}
+
+</script>
+
+</body>
+</html>
