@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Upload Photo</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#111;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+}
+
+img{
+width:100%;
+max-width:400px;
+border-radius:15px;
+margin-bottom:20px;
+}
+
+input, textarea{
+width:100%;
+padding:14px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:15px;
+background:gold;
+border:none;
+border-radius:50px;
+font-weight:bold;
+font-size:16px;
+cursor:pointer;
+}
+
+#status{
+margin-top:20px;
+font-size:18px;
+}
+
+.progress{
+width:100%;
+height:20px;
+background:#333;
+border-radius:50px;
+overflow:hidden;
+margin-top:15px;
+display:none;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:gold;
+transition:0.3s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Guestbook</h2>
+
+<img id="preview">
+
+<input
+id="name"
+type="text"
+placeholder="Nama Anda"
+required>
+
+<textarea
+id="message"
+placeholder="Ucapan"
+rows="4"></textarea>
+
+<button onclick="uploadPhoto()">
+UPLOAD PHOTO
+</button>
+
+<div class="progress" id="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<div id="status"></div>
+
+</div>
+
+<script>
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbz2xDbbp_YITJ5moHUgawIWojJ1tW6lVVrPB2E_430OV8-DnJSak4m-qPhM3zmJlfbqZw/exec";
+
+const photo = localStorage.getItem("photo");
+
+if(!photo){
+window.location.href="camera.html";
+}
+
+document.getElementById("preview").src = photo;
+
+async function uploadPhoto(){
+
+const name =
+document.getElementById("name").value.trim();
+
+const message =
+document.getElementById("message").value.trim();
+
+if(!name){
+alert("Sila masukkan nama");
+return;
+}
+
+document.getElementById("progress").style.display="block";
+
+let width = 0;
+
+const bar =
+document.getElementById("bar");
+
+const fakeProgress = setInterval(()=>{
+
+if(width < 90){
+
+width += 10;
+bar.style.width = width + "%";
+
+}
+
+},200);
+
+try{
+
+const base64 =
+photo.split(",")[1];
+
+const response = await fetch(
+API_URL,
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name:name,
+message:message,
+image:base64
+})
+}
+);
+
+const result = await response.json();
+
+clearInterval(fakeProgress);
+
+bar.style.width = "100%";
+
+if(result.success){
+
+document.getElementById("status").innerHTML =
+"✅ Upload berjaya";
+
+localStorage.removeItem("photo");
+
+setTimeout(()=>{
+
+window.location.href = "success.html";
+
+},1500);
+
+}else{
+
+document.getElementById("status").innerHTML =
+"❌ Upload gagal<br>" + result.error;
+
+}
+
+}catch(err){
+
+clearInterval(fakeProgress);
+
+document.getElementById("status").innerHTML =
+"❌ Network Error";
+
+console.log(err);
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
