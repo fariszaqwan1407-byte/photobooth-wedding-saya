@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Wedding Gallery</title>
+
+<style>
+
+body{
+margin:0;
+padding:20px;
+background:#111;
+font-family:Arial,sans-serif;
+color:white;
+}
+
+h1{
+text-align:center;
+margin-bottom:25px;
+}
+
+.counter{
+text-align:center;
+margin-bottom:20px;
+font-size:18px;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+gap:15px;
+}
+
+.card{
+background:#1a1a1a;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 0 15px rgba(255,215,0,.2);
+}
+
+.card img{
+width:100%;
+display:block;
+}
+
+.filename{
+padding:10px;
+font-size:12px;
+text-align:center;
+color:#ccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>📸 Wedding Memories</h1>
+
+<div class="counter" id="counter">
+Loading...
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<script>
+
+const API =
+"https://script.google.com/macros/s/AKfycbz2xDbbp_YITJ5moHUgawIWojJ1tW6lVVrPB2E_430OV8-DnJSak4m-qPhM3zmJlfbqZw/exec?action=gallery";
+
+async function loadGallery(){
+
+try{
+
+const res = await fetch(API);
+const data = await res.json();
+
+document.getElementById("counter").innerHTML =
+"📷 " + data.length + " gambar dihantar";
+
+let html = "";
+
+data.forEach(img=>{
+
+html += `
+<div class="card">
+<img src="${img.url}">
+<div class="filename">${img.name}</div>
+</div>
+`;
+
+});
+
+document.getElementById("gallery").innerHTML = html;
+
+}catch(err){
+
+document.getElementById("counter").innerHTML =
+"Gagal memuatkan gallery";
+
+}
+
+}
+
+loadGallery();
+
+setInterval(loadGallery,5000);
+
+</script>
+
+</body>
+</html>
